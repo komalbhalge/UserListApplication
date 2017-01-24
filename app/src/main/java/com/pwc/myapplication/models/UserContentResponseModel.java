@@ -1,10 +1,9 @@
-package com.pwc.myapplication.ModelClasses;
+package com.pwc.myapplication.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by mac_admin on 23/01/17.

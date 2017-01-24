@@ -1,6 +1,4 @@
-package com.pwc.myapplication;
-
-import com.pwc.myapplication.Utils.Constants;
+package com.pwc.myapplication.connections;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;

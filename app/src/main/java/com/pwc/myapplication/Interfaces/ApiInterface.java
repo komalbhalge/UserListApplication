@@ -1,6 +1,6 @@
-package com.pwc.myapplication.Interfaces;
+package com.pwc.myapplication.interfaces;
 
-import com.pwc.myapplication.ModelClasses.UserContentResponseModel;
+import com.pwc.myapplication.models.UserContentResponseModel;
 
 import retrofit.Call;
 import retrofit.http.GET;

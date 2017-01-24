@@ -1,4 +1,4 @@
-package com.pwc.myapplication;
+package com.pwc.myapplication.activities;
 
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -6,45 +6,56 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.Window;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pwc.myapplication.Adapters.DataAdapter;
-import com.pwc.myapplication.ModelClasses.UserContentResponseModel;
-import com.pwc.myapplication.Interfaces.ApiInterface;
+import com.pwc.myapplication.connections.APIClient;
+import com.pwc.myapplication.R;
+import com.pwc.myapplication.adapters.DataAdapter;
+import com.pwc.myapplication.models.UserContentResponseModel;
+import com.pwc.myapplication.interfaces.ApiInterface;
+import com.pwc.myapplication.utils.UIUtils;
 
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
-//import retrofit2.Callback;
-//import retrofit2.Response;
 
 public class NewsListActivity extends AppCompatActivity {
-
+    private TextView mTitle;
     private RecyclerView newsRecyclerView;
     private DataAdapter dataAdapter;
-    //   private UserContentResponseModel mNewsData;
+    private int status_code_done = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Fresco.initialize(this);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_news_list);
 
         init();
-        getData();
+
+        //Check for internet connection
+        if(UIUtils.isInternetOn(NewsListActivity.this)){
+            getData();
+        }else {
+            UIUtils.showAlert(this,getResources().getString(R.string.tx_connection_failled),getResources().getString(R.string.tx_no_internet_connection));
+
+        }
+
 
     }
-
 
     private void init() { /*Initialize objects */
         newsRecyclerView = (RecyclerView) findViewById(R.id.news_recycler_view);
-
+        mTitle = (TextView) findViewById(R.id.tv_main_title);
         newsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     private void showData(UserContentResponseModel newsData) {
-
 
         if (newsData != null) {
             dataAdapter = new DataAdapter(newsData.getRows());
@@ -73,7 +84,13 @@ public class NewsListActivity extends AppCompatActivity {
                 int statusCode = response.code();
 
                 UserContentResponseModel mNewsData = response.body();
-                showData(mNewsData);
+                if (statusCode == status_code_done && mNewsData != null) {
+                    mTitle.setText(mNewsData.getTitle());
+                    showData(mNewsData);
+                } else {
+                    Toast.makeText(NewsListActivity.this, getResources().getString(R.string.tx_data_fetch_unable), Toast.LENGTH_LONG).show();
+                }
+
             }
 
             @Override
