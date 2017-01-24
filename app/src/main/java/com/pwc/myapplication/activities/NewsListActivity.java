@@ -1,22 +1,19 @@
 package com.pwc.myapplication.activities;
 
-import android.app.ProgressDialog;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.Window;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pwc.myapplication.connections.APIClient;
 import com.pwc.myapplication.R;
 import com.pwc.myapplication.adapters.DataAdapter;
-import com.pwc.myapplication.models.UserContentResponseModel;
+import com.pwc.myapplication.connections.APIClient;
 import com.pwc.myapplication.interfaces.ApiInterface;
+import com.pwc.myapplication.models.UserContentResponseModel;
 import com.pwc.myapplication.utils.UIUtils;
 
 import retrofit.Call;
@@ -38,7 +35,7 @@ public class NewsListActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_news_list);
 
-        //Initialize objects
+
          init();
 
         //Check for internet connection
@@ -50,6 +47,9 @@ public class NewsListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *  Initialize objects
+     */
     private void init() {
         newsRecyclerView = (RecyclerView) findViewById(R.id.news_recycler_view);
         mTitle = (TextView) findViewById(R.id.tv_main_title);
@@ -73,6 +73,10 @@ public class NewsListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Show data from server on the screen
+     * @param newsData
+     */
     private void showData(UserContentResponseModel newsData) {
 
         if (newsData != null) {
@@ -84,6 +88,9 @@ public class NewsListActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Fetch data from server
+     */
     private void getData() {
 
         ApiInterface apiService =

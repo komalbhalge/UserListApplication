@@ -48,6 +48,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             //Used Picasso -an Open source library for lazy loading of images//
             Picasso.with(context).load(newsList.get(i).getImageHref())
                     .placeholder(R.drawable.image_placeholder) //Placeholder until the image load
+                   
                     .into(viewHolder.iv_news, new Callback() {
                         @Override
                         public void onSuccess() {
