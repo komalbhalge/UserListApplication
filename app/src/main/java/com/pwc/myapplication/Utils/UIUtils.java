@@ -59,7 +59,7 @@ public class UIUtils {
 
             }
         });
-        // Showing Alert Message
+
         alertDialog.show();
     }
 }

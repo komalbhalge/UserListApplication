@@ -1,5 +1,6 @@
 package com.pwc.myapplication.interfaces;
 
+import com.pwc.myapplication.connections.APIClient;
 import com.pwc.myapplication.models.UserContentResponseModel;
 
 import retrofit.Call;
@@ -12,7 +13,7 @@ import retrofit.http.GET;
 
 public interface ApiInterface {
 
-    @GET("u/746330/facts.json")
+    @GET(APIClient.GET_CONTENT_URL)
     Call<UserContentResponseModel> getUserContent();
 
 }

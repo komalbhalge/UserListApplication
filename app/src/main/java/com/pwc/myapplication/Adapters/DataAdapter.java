@@ -40,10 +40,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final DataAdapter.ViewHolder viewHolder, int i) {
 
+        //Display the data
         if (!TextUtils.isEmpty(newsList.get(i).getImageHref())) {
+
             viewHolder.progressBar.setVisibility(View.VISIBLE);
+
+            //Used Picasso -an Open source library for lazy loading of images//
             Picasso.with(context).load(newsList.get(i).getImageHref())
-                    .placeholder(R.drawable.image_placeholder)
+                    .placeholder(R.drawable.image_placeholder) //Placeholder until the image load
                     .into(viewHolder.iv_news, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -57,14 +61,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                         }
                     });
 
-//            Glide.with(context).load(newsList.get(i).getImageHref())
-//                    //.fitCenter()
-//                    .dontAnimate()
-//                    .placeholder(R.drawable.load_icon)
-//                    .error(R.drawable.image_placeholder)
-//                    .into(viewHolder.iv_news)
-//            ;
         }
+
         if (newsList.get(i).getTitle() != null) {
             viewHolder.tv_title.setText(newsList.get(i).getTitle());
 

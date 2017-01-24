@@ -4,7 +4,6 @@
     <!--Alerts -->
 
     <string name="tx_inprogress">Please wait...</string>
-
     <string name="tx_data_fetch_unable">Unable to fetch the data.</string>
     <string name="tx_connection_failled">Connection Failled</string>
     <string name="tx_no_internet_connection">Please check your internet connection</string>

@@ -1,6 +1,7 @@
 package com.pwc.myapplication.activities;
 
 import android.app.ProgressDialog;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,35 +24,52 @@ import retrofit.Callback;
 import retrofit.Response;
 
 public class NewsListActivity extends AppCompatActivity {
+
     private TextView mTitle;
     private RecyclerView newsRecyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private DataAdapter dataAdapter;
     private int status_code_done = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Fresco.initialize(this);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_news_list);
 
-        init();
+        //Initialize objects
+         init();
 
         //Check for internet connection
         if(UIUtils.isInternetOn(NewsListActivity.this)){
             getData();
         }else {
             UIUtils.showAlert(this,getResources().getString(R.string.tx_connection_failled),getResources().getString(R.string.tx_no_internet_connection));
-
         }
-
 
     }
 
-    private void init() { /*Initialize objects */
+    private void init() {
         newsRecyclerView = (RecyclerView) findViewById(R.id.news_recycler_view);
         mTitle = (TextView) findViewById(R.id.tv_main_title);
         newsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+
+        // Setup refresh listener which triggers new data loading
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Check for internet connection
+                if(UIUtils.isInternetOn(NewsListActivity.this)){
+                    getData();
+                }else {
+                    UIUtils.showAlert(NewsListActivity.this,getResources().getString(R.string.tx_connection_failled),getResources().getString(R.string.tx_no_internet_connection));
+
+                }
+            }
+        });
 
     }
 
@@ -62,14 +80,11 @@ public class NewsListActivity extends AppCompatActivity {
 
             newsRecyclerView.setAdapter(dataAdapter);
         } else {
-            Toast.makeText(NewsListActivity.this, "UNABKLR", Toast.LENGTH_LONG).show();
+            Toast.makeText(NewsListActivity.this, getResources().getString(R.string.tx_data_fetch_unable), Toast.LENGTH_LONG).show();
         }
     }
 
     private void getData() {
-        //While the app fetched data we are displaying a progress dialog
-        final ProgressDialog loading = ProgressDialog.show(this, "", getResources().getString(R.string.tx_inprogress), false, false);
-
 
         ApiInterface apiService =
                 APIClient.getClient().create(ApiInterface.class);
@@ -79,8 +94,9 @@ public class NewsListActivity extends AppCompatActivity {
         call.enqueue(new Callback<UserContentResponseModel>() {
             @Override
             public void onResponse(Response<UserContentResponseModel> response) {
-                //Dismissing the loading progressbar
-                loading.dismiss();
+
+                swipeRefreshLayout.setRefreshing(false);
+
                 int statusCode = response.code();
 
                 UserContentResponseModel mNewsData = response.body();
@@ -95,21 +111,12 @@ public class NewsListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Throwable t) {
-                //Dismissing the loading progressbar
-                loading.dismiss();
-                Toast.makeText(NewsListActivity.this, "" + t.getMessage(), Toast.LENGTH_LONG).show();
+                swipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(NewsListActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
 
             }
         });
 
     }
 
-    static class LoadingViewHolder extends RecyclerView.ViewHolder {
-        public ProgressBar progressBar;
-
-        public LoadingViewHolder(View itemView) {
-            super(itemView);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar1);
-        }
-    }
 }

@@ -12,6 +12,8 @@ public class APIClient {
 
 
     public static final String BASE_URL = "https://dl.dropboxusercontent.com/";
+    public static final String GET_CONTENT_URL =  "u/746330/facts.json";
+
     private static Retrofit retrofit = null;
 
 
